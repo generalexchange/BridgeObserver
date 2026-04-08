@@ -3,22 +3,12 @@
  */
 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Analytics } from '@vercel/analytics/react';
 import { HelmetProvider } from 'react-helmet-async';
-import { ThemeProvider } from './context/ThemeContext';
 import { Homepage } from './pages/Homepage';
-import { Login } from './pages/Login';
-import { Dashboard } from './pages/Dashboard';
-import { CompanyDetails } from './pages/CompanyDetails';
-import { OurTeam } from './pages/OurTeam';
-import { Documentation } from './pages/Documentation';
-import { HelpCenter } from './pages/HelpCenter';
-import { Community } from './pages/Community';
-import { Features } from './pages/Features';
-import { Pricing } from './pages/Pricing';
-import { RequestAccess } from './pages/RequestAccess';
+import { ArticlePage } from './pages/ArticlePage';
 
 // Page transition wrapper
 const PageTransition: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -42,16 +32,8 @@ const AnimatedRoutes: React.FC = () => {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageTransition><Homepage /></PageTransition>} />
-        <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
-        <Route path="/request-access" element={<PageTransition><RequestAccess /></PageTransition>} />
-        <Route path="/dashboard" element={<PageTransition><Dashboard /></PageTransition>} />
-        <Route path="/company/:symbol" element={<PageTransition><CompanyDetails /></PageTransition>} />
-        <Route path="/our-team" element={<PageTransition><OurTeam /></PageTransition>} />
-        <Route path="/documentation" element={<PageTransition><Documentation /></PageTransition>} />
-        <Route path="/help-center" element={<PageTransition><HelpCenter /></PageTransition>} />
-        <Route path="/community" element={<PageTransition><Community /></PageTransition>} />
-        <Route path="/features" element={<PageTransition><Features /></PageTransition>} />
-        <Route path="/pricing" element={<PageTransition><Pricing /></PageTransition>} />
+        <Route path="/article/:slug" element={<PageTransition><ArticlePage /></PageTransition>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>
   );
@@ -60,14 +42,12 @@ const AnimatedRoutes: React.FC = () => {
 const App: React.FC = () => {
   return (
     <HelmetProvider>
-      <ThemeProvider>
-        <Router>
-          <div className="bg-gray-50 dark:bg-[#0a0a0a]">
-            <AnimatedRoutes />
-            <Analytics />
-          </div>
-        </Router>
-      </ThemeProvider>
+      <Router>
+        <div className="news-app-shell">
+          <AnimatedRoutes />
+          <Analytics />
+        </div>
+      </Router>
     </HelmetProvider>
   );
 };

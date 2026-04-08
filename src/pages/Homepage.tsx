@@ -1,228 +1,201 @@
-/**
- * Homepage component - Professional landing page
- * Positioning Bridge Observer as a Bloomberg/Reuters-level platform
- * with AI-powered risk management for near-term trading
- */
-
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  TrendingUp, 
-  Shield, 
-  Brain, 
-  ArrowRight,
-  Activity,
-  Lock
-} from 'lucide-react';
-import { Navbar } from '../components/Navbar';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { SEO } from '../components/SEO';
+import {
+  articles,
+  featuredSlides,
+  mostReadStories,
+  navSections,
+  sponsoredStories,
+  trendingStories,
+} from '../data/newsSiteData';
 
 export const Homepage: React.FC = () => {
+  const [activeSection, setActiveSection] = useState<'All' | (typeof navSections)[number]>('All');
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const filteredArticles = useMemo(() => {
+    if (activeSection === 'All') return articles;
+    return articles.filter((article) => article.section === activeSection);
+  }, [activeSection]);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveSlide((previous) => (previous + 1) % featuredSlides.length);
+    }, 5500);
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <SEO 
-        title="Bridge Observer - Algorithmic Trade Engine"
-        description="Professional algorithmic risk management platform for options trading professionals. Connect with Interactive Brokers for real-time AI analysis, risk alerts, and trade optimization."
-        keywords="options trading platform, algorithmic trading, risk management software, Interactive Brokers integration, AI trading tools, options analysis, trading algorithms, professional trading platform, options strategy, trading risk management"
-        canonical="https://bridgeobserver.com/"
-        structuredData={{
-          '@context': 'https://schema.org',
-          '@type': 'SoftwareApplication',
-          name: 'Bridge Observer',
-          applicationCategory: 'FinanceApplication',
-          operatingSystem: 'Web, iOS, Android',
-          offers: {
-            '@type': 'Offer',
-            price: '49.00',
-            priceCurrency: 'USD'
-          },
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: '4.8',
-            ratingCount: '1247'
-          }
-        }}
+    <div className="news-root">
+      <SEO
+        title="Bridge Observer Daily | Dark Editorial News"
+        description="A modern dark-themed newsroom featuring breaking coverage, deep analysis, and structured sections across news, sports, business, and culture."
+        keywords="news homepage, dark mode news site, editorial design, modern newspaper layout, msn style, dallas morning news style"
       />
-      <Navbar showSearch={false} />
-      
-      {/* Add padding for fixed navbar */}
-      <div className="pt-14 sm:pt-16">
-        {/* Hero Section - Bloomberg Terminal Inspired */}
-        <section className="relative overflow-hidden bg-[#0a0a0a]">
-          {/* Animated background grid */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
-          
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Left Column - Main Message */}
-              <div className="space-y-8">
-                <div className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600/10 border border-blue-500/20 rounded-full">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                  <span className="text-blue-400 text-sm font-medium">Connect with Interactive Brokers</span>
-                </div>
-                
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                  Algorithmic Risk Management for
-                  <span className="text-blue-400"> Options Trading Professionals</span>
-                </h1>
-                
-                <p className="text-lg sm:text-xl text-gray-400 leading-relaxed">
-                  Bridge Observer combines the depth of <span className="text-blue-400 font-semibold">Thomson Reuters</span>, 
-                  the insight of <span className="text-blue-400 font-semibold">Bloomberg</span>, and 
-                  the clarity of <span className="text-blue-400 font-semibold">The New York Times</span> with 
-                  advanced AI algorithms that help traders manage risk and make informed decisions in real-time.
-                </p>
-                
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link
-                    to="/request-access"
-                    className="inline-flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 group"
-                  >
-                    Start Trading Smarter
-                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                  <a
-                    href="#features"
-                    className="inline-flex items-center justify-center px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-semibold rounded-lg border border-white/10 transition-all duration-200"
-                  >
-                    Explore Features
-                  </a>
-                </div>
-                
+
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
+      <header className="news-header" role="banner">
+        <div className="news-topbar">
+          <p>Bridge Observer Daily</p>
+          <p>{new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+        </div>
+        <nav className="news-nav" aria-label="Primary">
+          <Link to="/" className="brand-mark">
+            Bridge Observer
+          </Link>
+          <ul>
+            <li>
+              <button
+                type="button"
+                className={activeSection === 'All' ? 'active' : ''}
+                onClick={() => setActiveSection('All')}
+              >
+                Top
+              </button>
+            </li>
+            {navSections.map((section) => (
+              <li key={section}>
+                <button
+                  type="button"
+                  className={activeSection === section ? 'active' : ''}
+                  onClick={() => setActiveSection(section)}
+                >
+                  {section}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
+
+      <main id="main-content" className="home-main">
+        <section className="hero-carousel" aria-label="Top stories">
+          {featuredSlides.map((story, index) => (
+            <article
+              key={story.slug}
+              className={`hero-slide ${index === activeSlide ? 'is-visible' : ''}`}
+              aria-hidden={index !== activeSlide}
+            >
+              <img src={story.imageUrl} alt={story.title} loading={index === 0 ? 'eager' : 'lazy'} />
+              <div className="hero-overlay">
+                <span>{story.section}</span>
+                <h1>{story.title}</h1>
+                <p>{story.summary}</p>
+                <Link to={`/article/${story.slug}`}>Read full story</Link>
               </div>
-              
-              {/* Right Column - Dashboard Preview */}
-              <div className="relative">
-                {/* Floating Terminal Window */}
-                <div className="bg-[#1a1a1a] border border-blue-500/20 rounded-xl shadow-2xl overflow-hidden">
-                  {/* Terminal Header */}
-                  <div className="bg-[#0f0f0f] border-b border-blue-500/20 px-4 py-3 flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                    </div>
-                    <span className="text-xs text-gray-500 font-mono">BRIDGE_TERMINAL</span>
-                  </div>
-                  
-                  {/* Terminal Content */}
-                  <div className="p-6 space-y-4">
-                    {/* Live Market Data */}
-                    <div className="space-y-3">
-                      <div className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Live Market Analysis</div>
-                      
-                      {['AAPL', 'TSLA', 'NVDA'].map((ticker, i) => (
-                        <div key={ticker} className="flex items-center justify-between p-3 bg-[#0f0f0f] rounded-lg border border-white/5 hover:border-blue-500/30 transition-colors">
-                          <div className="flex items-center space-x-3">
-                            <div className={`w-2 h-2 rounded-full ${i % 2 === 0 ? 'bg-green-500' : 'bg-red-500'} animate-pulse`}></div>
-                            <span className="text-white font-mono font-semibold">{ticker}</span>
-                          </div>
-                          <div className="flex items-center space-x-4">
-                            <span className={`text-sm font-semibold ${i % 2 === 0 ? 'text-green-400' : 'text-red-400'}`}>
-                              {i % 2 === 0 ? '+' : '-'}{(Math.random() * 5 + 1).toFixed(2)}%
-                            </span>
-                            <Activity className={`w-4 h-4 ${i % 2 === 0 ? 'text-green-500' : 'text-red-500'}`} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    {/* Risk Alert */}
-                    <div className="mt-6 p-4 bg-blue-600/20 border border-blue-500/30 rounded-lg">
-                      <div className="flex items-start space-x-3">
-                        <Shield className="w-5 h-5 text-blue-400 mt-0.5" />
-                        <div>
-                          <div className="text-sm font-semibold text-white mb-1">Risk Alert: Portfolio Volatility Detected</div>
-                          <div className="text-xs text-gray-400">AI suggests rebalancing tech positions. View recommendations →</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Floating Stats Cards */}
-                <div className="absolute -right-4 top-20 w-48 p-4 bg-[#1a1a1a] border border-green-500/30 rounded-lg shadow-xl">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <TrendingUp className="w-4 h-4 text-green-500" />
-                    <span className="text-xs text-gray-400">Profit Alert</span>
-                  </div>
-                  <div className="text-2xl font-bold text-green-400">+12.8%</div>
-                  <div className="text-xs text-gray-500">Above target</div>
-                </div>
-                
-                <div className="absolute -left-4 bottom-20 w-48 p-4 bg-[#1a1a1a] border border-purple-500/30 rounded-lg shadow-xl">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Brain className="w-4 h-4 text-purple-500" />
-                    <span className="text-xs text-gray-400">AI Confidence</span>
-                  </div>
-                  <div className="text-2xl font-bold text-purple-400">94%</div>
-                  <div className="text-xs text-gray-500">High accuracy</div>
-                </div>
-              </div>
-            </div>
+            </article>
+          ))}
+          <div className="hero-controls">
+            <button
+              type="button"
+              onClick={() =>
+                setActiveSlide((previous) => (previous - 1 + featuredSlides.length) % featuredSlides.length)
+              }
+              aria-label="Previous headline"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveSlide((previous) => (previous + 1) % featuredSlides.length)}
+              aria-label="Next headline"
+            >
+              <ChevronRight size={18} />
+            </button>
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="border-t border-[#2a2a2a] bg-[#0a0a0a] py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-              {/* Brand */}
-              <div className="col-span-2 md:col-span-1">
-                <h3 className="text-2xl font-serif font-bold text-white mb-3">Bridge Observer</h3>
-                <p className="text-gray-500 text-sm leading-relaxed mb-4">
-                  Professional trading intelligence with AI-powered risk management
-                </p>
-                <div className="flex items-center space-x-2">
-                  <Lock className="w-4 h-4 text-green-500" />
-                  <span className="text-xs text-gray-500">Enterprise-grade security</span>
-                </div>
-              </div>
-
-              {/* Platform */}
-              <div>
-                <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Platform</h4>
-                <ul className="space-y-2">
-                  <li><Link to="/features" className="text-gray-500 hover:text-blue-500 transition-colors text-sm">Features</Link></li>
-                  <li><Link to="/pricing" className="text-gray-500 hover:text-blue-500 transition-colors text-sm">Pricing</Link></li>
-                </ul>
-              </div>
-
-              {/* Company */}
-              <div>
-                <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Company</h4>
-                <ul className="space-y-2">
-                  <li><Link to="/our-team" className="text-gray-500 hover:text-blue-500 transition-colors text-sm">Meet the Team</Link></li>
-                  <li><a href="#" className="text-gray-500 hover:text-blue-500 transition-colors text-sm">Contact Us</a></li>
-                  <li><a href="#" className="text-gray-500 hover:text-blue-500 transition-colors text-sm">Press</a></li>
-                </ul>
-              </div>
-
-              {/* Resources */}
-              <div>
-                <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Resources</h4>
-                <ul className="space-y-2">
-                  <li><Link to="/documentation" className="text-gray-500 hover:text-blue-500 transition-colors text-sm">Documentation</Link></li>
-                  <li><Link to="/help-center" className="text-gray-500 hover:text-blue-500 transition-colors text-sm">Help Center</Link></li>
-                  <li><Link to="/community" className="text-gray-500 hover:text-blue-500 transition-colors text-sm">Community</Link></li>
-                </ul>
-              </div>
+        <section className="content-layout">
+          <section className="article-grid" aria-label="Latest stories">
+            <div className="section-header">
+              <h2>{activeSection === 'All' ? 'Latest Coverage' : `${activeSection} Coverage`}</h2>
             </div>
-
-            {/* Bottom Bar */}
-            <div className="border-t border-[#2a2a2a] pt-8 flex flex-col md:flex-row justify-between items-center">
-              <p className="text-gray-500 text-sm mb-4 md:mb-0">
-                © {new Date().getFullYear()} Bridge Observer. All rights reserved.
-              </p>
-              <div className="flex space-x-6 text-sm text-gray-500">
-                <a href="#" className="hover:text-blue-500 transition-colors">Privacy Policy</a>
-                <a href="#" className="hover:text-blue-500 transition-colors">Terms of Service</a>
-                <a href="#" className="hover:text-blue-500 transition-colors">Cookie Policy</a>
-              </div>
+            <div className="grid-wrap">
+              {filteredArticles.map((story) => (
+                <article key={story.slug} className="news-card">
+                  <Link to={`/article/${story.slug}`} className="card-link" aria-label={`Read ${story.title}`}>
+                    <img src={story.imageUrl} alt={story.title} loading="lazy" />
+                    <div className="card-body">
+                      <span>{story.section}</span>
+                      <h3>{story.title}</h3>
+                      <p>{story.summary}</p>
+                    </div>
+                  </Link>
+                </article>
+              ))}
             </div>
+          </section>
+
+          <aside className="home-sidebar" aria-label="Sidebar highlights">
+            <section>
+              <h3>Trending Stories</h3>
+              <ul>
+                {trendingStories.map((story) => (
+                  <li key={story.slug}>
+                    <Link to={`/article/${story.slug}`}>{story.title}</Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section>
+              <h3>Most Read</h3>
+              <ul>
+                {mostReadStories.map((story) => (
+                  <li key={story.slug}>
+                    <Link to={`/article/${story.slug}`}>{story.title}</Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section>
+              <h3>Sponsored</h3>
+              <ul>
+                {sponsoredStories.map((item) => (
+                  <li key={item.title}>
+                    <a href="#" aria-label={`${item.title} by ${item.sponsor}`}>
+                      {item.title}
+                    </a>
+                    <small>{item.sponsor}</small>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </aside>
+        </section>
+      </main>
+
+      <footer className="news-footer">
+        <section className="newsletter">
+          <h2>Daily Briefing Newsletter</h2>
+          <form>
+            <label htmlFor="newsletter-email" className="sr-only">
+              Email address
+            </label>
+            <input id="newsletter-email" type="email" placeholder="Email address" required />
+            <button type="submit">Subscribe</button>
+          </form>
+        </section>
+        <div className="footer-links">
+          <div>
+            <h4>Follow</h4>
+            <a href="#">X</a>
+            <a href="#">Instagram</a>
+            <a href="#">YouTube</a>
           </div>
-        </footer>
-      </div>
+          <div>
+            <h4>Contact</h4>
+            <a href="mailto:newsroom@bridgeobserver.daily">newsroom@bridgeobserver.daily</a>
+            <p>Dallas, Texas</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
