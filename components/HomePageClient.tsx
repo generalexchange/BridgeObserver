@@ -16,6 +16,7 @@ import {
 import { slugForSection } from '@/lib/catalog';
 import { SiteFooter } from '@/components/SiteFooter';
 import { AdSlot } from '@/components/AdSlot';
+import { HeaderSearch } from '@/components/HeaderSearch';
 
 type FeedJson = {
   articles: NewsArticle[];
@@ -230,10 +231,11 @@ export default function HomePageClient({ initialArticles, initialPage, totalPage
           <p>Bridge Observer Daily</p>
           <p>{new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}</p>
         </div>
-        <nav className="news-nav" aria-label="Primary">
+        <nav className="news-nav news-nav--with-search" aria-label="Primary">
           <Link href="/" className="brand-mark">
             Bridge Observer
           </Link>
+          <HeaderSearch formId="home-header-search" />
           <ul>
             <li>
               <Link href="/" className={topNavActive ? 'active' : ''} aria-current={topNavActive ? 'page' : undefined}>
@@ -304,10 +306,6 @@ export default function HomePageClient({ initialArticles, initialPage, totalPage
           <section className="article-grid home-article-stream" aria-label="Latest stories">
             <div className="section-header">
               <h2>Latest coverage</h2>
-              <p className="home-stream__hint">
-                Scroll down to load more stories automatically, or use <strong>Load more</strong>. Paginated URLs
-                like <Link href="/?page=2">/?page=2</Link> work without JavaScript.
-              </p>
             </div>
 
             <AdSlot slotId="home-leaderboard" format="leaderboard" />

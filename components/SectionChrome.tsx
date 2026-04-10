@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { HeaderSearch } from '@/components/HeaderSearch';
 import { navSections, type NewsSection } from '@/data/newsSiteData';
 import { slugForSection } from '@/lib/catalog';
 
@@ -13,10 +14,11 @@ export function SectionChrome({ activeSection }: Props) {
         <p>Bridge Observer Daily</p>
         <p>{new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}</p>
       </div>
-      <nav className="news-nav" aria-label="Primary">
+      <nav className="news-nav news-nav--with-search" aria-label="Primary">
         <Link href="/" className="brand-mark">
           Bridge Observer
         </Link>
+        <HeaderSearch formId="section-header-search" />
         <ul>
           <li>
             <Link href="/">Home</Link>
