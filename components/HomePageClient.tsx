@@ -10,7 +10,7 @@ import { PAGE_SIZE, slugForSection } from '@/lib/catalog';
 import { HomeFeedHighlightStrip } from '@/components/HomeFeedHighlightStrip';
 import { SiteFooter } from '@/components/SiteFooter';
 import { AdSlot } from '@/components/AdSlot';
-import { HeaderSearch } from '@/components/HeaderSearch';
+import { SitePrimaryNav } from '@/components/SitePrimaryNav';
 
 type FeedJson = {
   articles: NewsArticle[];
@@ -171,6 +171,20 @@ export default function HomePageClient({ initialArticles, initialPage, totalPage
 
   const topNavActive = pathname === '/' && urlSyncedPage === 1;
 
+  const primaryNavItems = useMemo(
+    () => [
+      { key: 'top', href: '/', label: 'Top', active: topNavActive },
+      ...navSections.map((section) => ({
+        key: section,
+        href: `/${slugForSection(section)}?page=1`,
+        label: section,
+        active: false,
+        prefetch: false as boolean,
+      })),
+    ],
+    [topNavActive],
+  );
+
   const scrollToFooter = () => {
     document.getElementById('site-footer')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
@@ -234,29 +248,7 @@ export default function HomePageClient({ initialArticles, initialPage, totalPage
           <p>Bridge Observer Daily</p>
           <p>{new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}</p>
         </div>
-        <nav className="news-nav news-nav--with-search" aria-label="Primary">
-          <Link href="/" className="brand-mark">
-            Bridge Observer
-          </Link>
-          <HeaderSearch formId="home-header-search" />
-          <ul>
-            <li>
-              <Link href="/" className={topNavActive ? 'active' : ''} aria-current={topNavActive ? 'page' : undefined}>
-                Top
-              </Link>
-            </li>
-            {navSections.map((section) => {
-              const href = `/${slugForSection(section)}?page=1`;
-              return (
-                <li key={section}>
-                  <Link href={href} prefetch={false}>
-                    {section}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+        <SitePrimaryNav searchFormId="home-header-search" items={primaryNavItems} />
       </header>
 
       <main id="main-content" className="home-main">

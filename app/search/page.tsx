@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { SiteFooter } from '@/components/SiteFooter';
-import { HeaderSearch } from '@/components/HeaderSearch';
+import { SitePrimaryNav } from '@/components/SitePrimaryNav';
 import { searchArticles } from '@/lib/searchArticles';
 type PageProps = {
   searchParams: Record<string, string | string[] | undefined>;
@@ -36,17 +36,10 @@ export default function SearchPage({ searchParams }: PageProps) {
           <p>Bridge Observer Daily</p>
           <p>Search</p>
         </div>
-        <nav className="news-nav news-nav--with-search" aria-label="Primary">
-          <Link href="/" className="brand-mark">
-            Bridge Observer
-          </Link>
-          <HeaderSearch formId="search-page-q" />
-          <ul className="news-nav__compact">
-            <li>
-              <Link href="/">Home</Link>
-            </li>
-          </ul>
-        </nav>
+        <SitePrimaryNav
+          searchFormId="search-page-q"
+          items={[{ key: 'home', href: '/', label: 'Home' }]}
+        />
       </header>
 
       <main id="search-main" className="search-page">
