@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Facebook, Linkedin, MessageCircle, Share2, Twitter } from 'lucide-react';
+import { HeaderSearch } from '@/components/HeaderSearch';
 import { SiteFooter } from '@/components/SiteFooter';
 import { getAllArticles, getArticleBySlug } from '@/lib/catalog';
 
@@ -41,11 +42,12 @@ export default function ArticlePage({ params }: PageProps) {
           <p>{article.section}</p>
           <p>{article.publishedAt}</p>
         </div>
-        <nav className="news-nav" aria-label="Article navigation">
+        <nav className="news-nav news-nav--with-search" aria-label="Article navigation">
           <Link href="/" className="brand-mark">
             Bridge Observer
           </Link>
-          <ul>
+          <HeaderSearch formId="article-header-search" />
+          <ul className="news-nav__compact">
             <li>
               <Link href="/">Home</Link>
             </li>
