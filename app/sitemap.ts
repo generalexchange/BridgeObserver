@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { navSections } from '@/data/newsSiteData';
-import { getAllArticles, getFeedPage, slugForSection } from '@/lib/catalog';
+import { getAllArticles, getFeedPage, getHomeFeedPage, slugForSection } from '@/lib/catalog';
 import { getSiteUrl } from '@/lib/site';
 
 const STATIC_PATHS = ['/', '/about', '/contact', '/privacy', '/terms', '/sitemap-page'];
@@ -11,7 +11,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
 
   for (const path of STATIC_PATHS) {
-    entries.push({ url: `${site}${path}`, lastModified: last, changeFrequency: 'daily', priority: path === '/' ? 1 : 0.6 });
+    if (path !== '/') {
+      entries.push({ url: `${site}${path}`, lastModified: last, changeFrequency: 'daily', priority: 0.6 });
+    }
+  }
+
+  const { totalPages: homePages } = getHomeFeedPage(1);
+  const maxHomePages = Math.min(homePages, 30);
+  for (let p = 1; p <= maxHomePages; p += 1) {
+    entries.push({
+      url: p === 1 ? `${site}/` : `${site}/?page=${p}`,
+      lastModified: last,
+      changeFrequency: 'hourly',
+      priority: p === 1 ? 1 : 0.55,
+    });
   }
 
   for (const section of navSections) {

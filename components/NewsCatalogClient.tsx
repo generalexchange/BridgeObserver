@@ -191,22 +191,6 @@ export function NewsCatalogClient({
   }, []);
 
   useEffect(() => {
-    const path = window.location.pathname + window.location.search;
-    try {
-      const saved = sessionStorage.getItem(`scroll-pos:${path}`);
-      if (saved != null && 'scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-        const y = parseInt(saved, 10);
-        if (!Number.isNaN(y)) {
-          requestAnimationFrame(() => window.scrollTo(0, y));
-        }
-      }
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  useEffect(() => {
     const onPop = () => {
       const params = new URLSearchParams(window.location.search);
       const p = Math.max(1, parseInt(params.get('page') ?? '1', 10) || 1);
@@ -322,10 +306,6 @@ export function NewsCatalogClient({
           <span className="news-catalog__page-link is-disabled">Next page</span>
         )}
       </nav>
-
-      <button type="button" className="news-catalog__sticky-footer-btn" onClick={scrollToFooter}>
-        Footer
-      </button>
     </div>
   );
 }

@@ -162,3 +162,19 @@ export function hasMorePages(section: NewsSection, page: number): boolean {
   const totalPages = Math.max(1, Math.ceil(pool.length / PAGE_SIZE));
   return page < totalPages;
 }
+
+/** Full-site feed (all sections) for the homepage — one vertical stream. */
+export function getHomeFeedPage(page: number): {
+  items: NewsArticle[];
+  total: number;
+  totalPages: number;
+  page: number;
+} {
+  const pool = catalog;
+  const total = pool.length;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const safePage = Math.min(Math.max(1, page), totalPages);
+  const start = (safePage - 1) * PAGE_SIZE;
+  const items = pool.slice(start, start + PAGE_SIZE);
+  return { items, total, totalPages, page: safePage };
+}
