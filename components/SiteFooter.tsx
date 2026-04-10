@@ -58,7 +58,7 @@ const columns: Col[] = [
       { label: 'Events', href: '/events' },
       { label: 'Classifieds', href: '/advertising' },
       { label: 'Tools & Services', href: '/help' },
-      { label: 'Times Insider', href: '/about' },
+      { label: 'Observer Insider', href: '/about' },
       { label: 'Photography', href: '/entertainment?page=1' },
       { label: 'Reader Center', href: '/help' },
     ],
