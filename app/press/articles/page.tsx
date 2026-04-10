@@ -1,5 +1,5 @@
-import { PressArticlesListPage } from '@/components/press/PressArticlesListPage';
+import { PressFilesPage } from '@/components/press/PressFilesPage';
 
 export default function PressArticlesRoute() {
-  return <PressArticlesListPage />;
+  return <PressFilesPage />;
 }

@@ -162,7 +162,7 @@ export function PressEditorPage() {
               <h1 className="press-page__h1">Article editor</h1>
               <p className="press-page__lede">
                 <Link href={listHref} className="press-inline-link">
-                  ← Back to articles
+                  ← Back to files
                 </Link>
               </p>
             </div>
