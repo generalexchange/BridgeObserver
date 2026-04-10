@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SiteFooter } from '@/components/SiteFooter';
+import { staticPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = staticPageMetadata('/privacy', {
   title: 'Privacy Policy | Bridge Observer Daily',
   description: 'Privacy policy placeholder for Bridge Observer Daily.',
-};
+});
 
 export default function PrivacyPage() {
   return (

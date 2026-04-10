@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { SiteFooter } from '@/components/SiteFooter';
 import { SitePrimaryNav } from '@/components/SitePrimaryNav';
+import { absoluteUrl } from '@/lib/seo';
 import { searchArticles } from '@/lib/searchArticles';
 type PageProps = {
   searchParams: Record<string, string | string[] | undefined>;
@@ -11,13 +12,49 @@ type PageProps = {
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
   const raw = searchParams.q;
   const q = (Array.isArray(raw) ? raw[0] : raw)?.trim() ?? '';
+  const canonical = absoluteUrl('/search');
+
   if (!q) {
-    return { title: 'Search | Bridge Observer Daily', description: 'Search articles and briefs.' };
+    const title = 'Search | Bridge Observer Daily';
+    const description = 'Search articles and briefs.';
+    return {
+      title,
+      description,
+      alternates: { canonical },
+      openGraph: {
+        type: 'website',
+        url: canonical,
+        title,
+        description,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+      },
+      robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+    };
   }
+
+  const title = `Search: ${q} | Bridge Observer Daily`;
+  const description = `Results for “${q}” on Bridge Observer Daily.`;
+
   return {
-    title: `Search: ${q} | Bridge Observer Daily`,
-    description: `Results for “${q}” on Bridge Observer Daily.`,
-    robots: { index: true, follow: true },
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      type: 'website',
+      url: canonical,
+      title,
+      description,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+    robots: { index: false, follow: true, googleBot: { index: false, follow: true } },
   };
 }
 

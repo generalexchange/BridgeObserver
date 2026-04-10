@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SiteFooter } from '@/components/SiteFooter';
+import { staticPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = staticPageMetadata('/terms', {
   title: 'Terms of Use | Bridge Observer Daily',
   description: 'Terms of use placeholder for Bridge Observer Daily.',
-};
+});
 
 export default function TermsPage() {
   return (

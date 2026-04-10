@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SiteFooter } from '@/components/SiteFooter';
+import { staticPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = staticPageMetadata('/contact', {
   title: 'Contact | Bridge Observer Daily',
   description: 'Contact Bridge Observer Daily: tips, corrections, and partnerships (placeholder).',
-};
+});
 
 export default function ContactPage() {
   return (

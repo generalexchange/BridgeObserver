@@ -30,10 +30,25 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const prev = resolved > 1 ? `${site}${base}?page=${resolved - 1}` : undefined;
   const next = resolved < totalPages ? `${site}${base}?page=${resolved + 1}` : undefined;
 
+  const title = `${section} – Page ${resolved} | Bridge Observer Daily`;
+  const description = `Page ${resolved} of ${totalPages}: ${section} coverage, briefs, and wire desk placeholders from Bridge Observer Daily.`;
+
   return {
-    title: `${section} – Page ${resolved} | Bridge Observer Daily`,
-    description: `Page ${resolved} of ${totalPages}: ${section} coverage, briefs, and wire desk placeholders from Bridge Observer Daily.`,
+    title,
+    description,
     alternates: { canonical },
+    openGraph: {
+      type: 'website',
+      url: canonical,
+      title,
+      description,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
     icons: {
       other: [
         ...(prev ? [{ rel: 'prev' as const, url: prev }] : []),

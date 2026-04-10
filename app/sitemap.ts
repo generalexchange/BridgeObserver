@@ -3,7 +3,20 @@ import { navSections } from '@/data/newsSiteData';
 import { getAllArticles, getFeedPage, getHomeFeedPage, slugForSection } from '@/lib/catalog';
 import { getSiteUrl } from '@/lib/site';
 
-const STATIC_PATHS = ['/', '/about', '/contact', '/privacy', '/terms', '/sitemap-page'];
+/** Marketing and utility pages (home pagination is emitted separately). */
+const STATIC_PATHS = [
+  '/about',
+  '/contact',
+  '/privacy',
+  '/terms',
+  '/sitemap-page',
+  '/search',
+  '/subscribe',
+  '/accessibility',
+  '/help',
+  '/careers',
+  '/corrections',
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const site = getSiteUrl();

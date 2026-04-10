@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import { PlaceholderPage } from '@/components/PlaceholderPage';
+import { staticPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = staticPageMetadata('/education-network', {
   title: 'Learning Network | Bridge Observer Daily',
   description: 'Resources for teaching and learning.',
-};
+});
 
 export default function Page() {
   return (

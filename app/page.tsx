@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import HomePageClient from '@/components/HomePageClient';
+import { WebSiteJsonLd } from '@/components/WebSiteJsonLd';
 import { getHomeFeedPage, parsePage } from '@/lib/catalog';
 import { getSiteUrl } from '@/lib/site';
 
@@ -37,10 +38,13 @@ export default function Page({ searchParams }: PageProps) {
   const { items, totalPages, page: resolvedPage } = getHomeFeedPage(page);
 
   return (
-    <HomePageClient
-      initialArticles={items}
-      initialPage={resolvedPage}
-      totalPages={totalPages}
-    />
+    <>
+      <WebSiteJsonLd />
+      <HomePageClient
+        initialArticles={items}
+        initialPage={resolvedPage}
+        totalPages={totalPages}
+      />
+    </>
   );
 }

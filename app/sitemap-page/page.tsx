@@ -4,11 +4,12 @@ import { SiteFooter } from '@/components/SiteFooter';
 import { getAllArticles } from '@/lib/catalog';
 import { navSections } from '@/data/newsSiteData';
 import { slugForSection } from '@/lib/catalog';
+import { staticPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = staticPageMetadata('/sitemap-page', {
   title: 'Sitemap | Bridge Observer Daily',
   description: 'HTML sitemap: sections, articles, and key pages on Bridge Observer Daily.',
-};
+});
 
 export default function HtmlSitemapPage() {
   const articles = getAllArticles();

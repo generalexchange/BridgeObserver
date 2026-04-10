@@ -3,9 +3,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Facebook, Linkedin, MessageCircle, Share2, Twitter } from 'lucide-react';
+import { ArticleJsonLd } from '@/components/ArticleJsonLd';
 import { SiteFooter } from '@/components/SiteFooter';
 import { SitePrimaryNav } from '@/components/SitePrimaryNav';
 import { getAllArticles, getArticleBySlug } from '@/lib/catalog';
+import { absoluteUrl, publishedStringToIso } from '@/lib/seo';
 
 type PageProps = {
   params: {
@@ -17,9 +19,31 @@ export function generateMetadata({ params }: PageProps): Metadata {
   const article = getArticleBySlug(params.slug);
   if (!article) return { title: 'Article not found' };
 
+  const title = `${article.title} | Bridge Observer Daily`;
+  const url = absoluteUrl(`/article/${article.slug}`);
+  const iso = publishedStringToIso(article.publishedAt);
+
   return {
-    title: `${article.title} | Bridge Observer Daily`,
+    title,
     description: article.summary,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'article',
+      url,
+      title,
+      description: article.summary,
+      ...(iso ? { publishedTime: iso, modifiedTime: iso } : {}),
+      authors: [article.author],
+      section: article.section,
+      images: [{ url: article.imageUrl, alt: article.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: article.summary,
+      images: [article.imageUrl],
+    },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   };
 }
 
@@ -37,6 +61,7 @@ export default function ArticlePage({ params }: PageProps) {
 
   return (
     <div className="news-root">
+      <ArticleJsonLd article={article} />
       <header className="news-header" role="banner">
         <div className="news-topbar">
           <p>{article.section}</p>
