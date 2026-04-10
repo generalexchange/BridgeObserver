@@ -3,7 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Facebook, Linkedin, MessageCircle, Share2, Twitter } from 'lucide-react';
-import { articles, getArticleBySlug } from '@/data/newsSiteData';
+import { SiteFooter } from '@/components/SiteFooter';
+import { getAllArticles, getArticleBySlug } from '@/lib/catalog';
 
 type PageProps = {
   params: {
@@ -22,14 +23,14 @@ export function generateMetadata({ params }: PageProps): Metadata {
 }
 
 export function generateStaticParams() {
-  return articles.map((article) => ({ slug: article.slug }));
+  return getAllArticles().map((article) => ({ slug: article.slug }));
 }
 
 export default function ArticlePage({ params }: PageProps) {
   const article = getArticleBySlug(params.slug);
   if (!article) notFound();
 
-  const related = articles
+  const related = getAllArticles()
     .filter((item) => item.section === article.section && item.slug !== article.slug)
     .slice(0, 3);
 
@@ -136,6 +137,7 @@ export default function ArticlePage({ params }: PageProps) {
           </form>
         </section>
       </main>
+      <SiteFooter />
     </div>
   );
 }

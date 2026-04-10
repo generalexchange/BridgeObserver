@@ -13,6 +13,8 @@ import {
   sponsoredStories,
   type NewsSection,
 } from '@/data/newsSiteData';
+import { slugForSection } from '@/lib/catalog';
+import { SiteFooter } from '@/components/SiteFooter';
 
 export default function HomePageClient() {
   const [activeSection, setActiveSection] = useState<'All' | NewsSection>('All');
@@ -55,17 +57,22 @@ export default function HomePageClient() {
                 Top
               </button>
             </li>
-            {navSections.map((section) => (
-              <li key={section}>
-                <button
-                  type="button"
-                  className={activeSection === section ? 'active' : ''}
-                  onClick={() => setActiveSection(section)}
-                >
-                  {section}
-                </button>
-              </li>
-            ))}
+            {navSections.map((section) => {
+              const href = `/${slugForSection(section)}?page=1`;
+              const isActive = activeSection === section;
+              return (
+                <li key={section}>
+                  <Link
+                    href={href}
+                    className={isActive ? 'active' : ''}
+                    aria-current={isActive ? 'page' : undefined}
+                    prefetch={false}
+                  >
+                    {section}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
       </header>
@@ -185,31 +192,7 @@ export default function HomePageClient() {
         </section>
       </main>
 
-      <footer className="news-footer">
-        <section className="newsletter">
-          <h2>Daily Briefing Newsletter</h2>
-          <form>
-            <label htmlFor="newsletter-email" className="sr-only">
-              Email address
-            </label>
-            <input id="newsletter-email" type="email" placeholder="Email address" required />
-            <button type="submit">Subscribe</button>
-          </form>
-        </section>
-        <div className="footer-links">
-          <div>
-            <h4>Follow</h4>
-            <a href="#">X</a>
-            <a href="#">Instagram</a>
-            <a href="#">YouTube</a>
-          </div>
-          <div>
-            <h4>Contact</h4>
-            <a href="mailto:newsroom@bridgeobserver.daily">newsroom@bridgeobserver.daily</a>
-            <p>Dallas, Texas</p>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
