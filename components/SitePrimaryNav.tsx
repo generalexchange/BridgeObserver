@@ -60,22 +60,20 @@ export function SitePrimaryNav({ searchFormId, items, navLabel = 'Primary' }: Pr
   return (
     <>
       <nav className="news-nav news-nav--with-search news-nav--responsive" aria-label={navLabel}>
-        <div className="news-nav__lead">
-          <button
-            ref={menuBtnRef}
-            type="button"
-            className="news-nav__menu-toggle"
-            aria-expanded={open}
-            aria-controls={panelId}
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            onClick={() => setOpen((v) => !v)}
-          >
-            {open ? <X size={22} strokeWidth={2} aria-hidden /> : <Menu size={22} strokeWidth={2} aria-hidden />}
-          </button>
-          <Link href="/" className="brand-mark">
-            Bridge Observer
-          </Link>
-        </div>
+        <button
+          ref={menuBtnRef}
+          type="button"
+          className="news-nav__menu-toggle"
+          aria-expanded={open}
+          aria-controls={panelId}
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? <X size={22} strokeWidth={2} aria-hidden /> : <Menu size={22} strokeWidth={2} aria-hidden />}
+        </button>
+        <Link href="/" className="brand-mark">
+          Bridge Observer
+        </Link>
         <HeaderSearch formId={searchFormId} />
         <ul className="news-nav__desktop-links">
           {items.map((item) => (
