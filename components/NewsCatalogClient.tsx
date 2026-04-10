@@ -4,8 +4,9 @@ import Link from 'next/link';
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { NewsArticle } from '@/data/newsSiteData';
 import type { NewsSection } from '@/data/newsSiteData';
-import { slugForSection } from '@/lib/catalog';
+import { PAGE_SIZE, slugForSection } from '@/lib/catalog';
 import { AdSlot } from '@/components/AdSlot';
+import { HomeFeedHighlightStrip } from '@/components/HomeFeedHighlightStrip';
 import { NewsArticleCard } from '@/components/NewsArticleCard';
 
 type FeedJson = {
@@ -219,9 +220,18 @@ export function NewsCatalogClient({
         );
       }
       blocks.push(<NewsArticleCard key={article.slug} article={article} listIndex={i} />);
+
+      const atPageBoundary = (i + 1) % PAGE_SIZE === 0;
+      if (atPageBoundary) {
+        const completedChunks = (i + 1) / PAGE_SIZE;
+        const feedPageNumber = initialPage + completedChunks - 1;
+        blocks.push(
+          <HomeFeedHighlightStrip key={`feed-highlights-${sectionApi}-${i}-${feedPageNumber}`} feedPageNumber={feedPageNumber} />,
+        );
+      }
     });
     return blocks;
-  }, [articles, sectionApi]);
+  }, [articles, initialPage, sectionApi]);
 
   const footerBreakEveryPages = 3;
   const clientPageBlocks = Math.max(0, maxLoadedPage - initialPage);

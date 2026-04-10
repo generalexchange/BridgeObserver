@@ -5,15 +5,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
-import {
-  featuredSlides,
-  mostReadStories,
-  navSections,
-  trendingStories,
-  sponsoredStories,
-  type NewsArticle,
-} from '@/data/newsSiteData';
-import { slugForSection } from '@/lib/catalog';
+import { featuredSlides, navSections, type NewsArticle } from '@/data/newsSiteData';
+import { PAGE_SIZE, slugForSection } from '@/lib/catalog';
+import { HomeFeedHighlightStrip } from '@/components/HomeFeedHighlightStrip';
 import { SiteFooter } from '@/components/SiteFooter';
 import { AdSlot } from '@/components/AdSlot';
 import { HeaderSearch } from '@/components/HeaderSearch';
@@ -210,9 +204,18 @@ export default function HomePageClient({ initialArticles, initialPage, totalPage
           </Link>
         </article>,
       );
+
+      const atPageBoundary = (i + 1) % PAGE_SIZE === 0;
+      if (atPageBoundary) {
+        const completedChunks = (i + 1) / PAGE_SIZE;
+        const feedPageNumber = initialPage + completedChunks - 1;
+        blocks.push(
+          <HomeFeedHighlightStrip key={`feed-highlights-${i}-${feedPageNumber}`} feedPageNumber={feedPageNumber} />,
+        );
+      }
     });
     return blocks;
-  }, [articles]);
+  }, [articles, initialPage]);
 
   const nextPageToFetch = maxLoadedPage < totalPages ? maxLoadedPage + 1 : null;
 
@@ -351,43 +354,6 @@ export default function HomePageClient({ initialArticles, initialPage, totalPage
             </nav>
           </section>
 
-          <aside className="home-sidebar" aria-label="Sidebar highlights">
-            <section>
-              <h3>Trending Stories</h3>
-              <ul>
-                {trendingStories.map((story) => (
-                  <li key={story.slug}>
-                    <Link href={`/article/${story.slug}`}>{story.title}</Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            <section>
-              <h3>Most Read</h3>
-              <ul>
-                {mostReadStories.map((story) => (
-                  <li key={story.slug}>
-                    <Link href={`/article/${story.slug}`}>{story.title}</Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            <section>
-              <h3>Sponsored</h3>
-              <ul>
-                {sponsoredStories.map((item) => (
-                  <li key={item.title}>
-                    <a href="#" aria-label={`${item.title} by ${item.sponsor}`}>
-                      {item.title}
-                    </a>
-                    <small>{item.sponsor}</small>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          </aside>
         </div>
       </main>
 
