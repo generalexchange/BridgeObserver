@@ -8,6 +8,12 @@
  *
  * Market workstation: add `markets.bridgeobserver.com` the same way; middleware rewrites to `/markets`.
  * Local: `http://localhost:3000/markets` or `http://markets.localhost:3000`.
+ *
+ * Editor Workbench: add `editor.bridgeobserver.com`; middleware rewrites to `/editor`.
+ * Local: `http://localhost:3000/editor` or `http://editor.localhost:3000`.
+ *
+ * Admin Control Center: add `admin.bridgeobserver.com`; middleware rewrites to `/admin`.
+ * Local: `http://localhost:3000/admin` or `http://admin.localhost:3000`.
  */
 export function getSiteUrl(): string {
   const env = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '');

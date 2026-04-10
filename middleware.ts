@@ -5,8 +5,10 @@ import type { NextRequest } from 'next/server';
  * Rewrites subdomain hosts to App Router segments:
  * - press.* → /press/* (Press CMS — unchanged)
  * - markets.* → /markets/* (Market Intelligence Workstation)
+ * - editor.* → /editor/* (Editor Workbench)
+ * - admin.* → /admin/* (Administrative Control Center)
  *
- * Local: press.localhost / markets.localhost in hosts, or use /press and /markets on localhost.
+ * Local: press.localhost / markets.localhost / editor.localhost in hosts.
  */
 function hostName(host: string): string {
   return host.split(':')[0]?.toLowerCase() ?? '';
@@ -20,6 +22,14 @@ function isMarketsHost(h: string): boolean {
   return h.startsWith('markets.') || h === 'markets.localhost';
 }
 
+function isEditorHost(h: string): boolean {
+  return h.startsWith('editor.') || h === 'editor.localhost';
+}
+
+function isAdminHost(h: string): boolean {
+  return h.startsWith('admin.') || h === 'admin.localhost';
+}
+
 function shouldBypass(pathname: string): boolean {
   return (
     pathname.startsWith('/_next') ||
@@ -29,7 +39,7 @@ function shouldBypass(pathname: string): boolean {
   );
 }
 
-function rewriteToSegment(request: NextRequest, segment: 'press' | 'markets'): NextResponse {
+function rewriteToSegment(request: NextRequest, segment: 'press' | 'markets' | 'editor' | 'admin'): NextResponse {
   const url = request.nextUrl.clone();
   const { pathname } = url;
 
@@ -53,6 +63,14 @@ export function middleware(request: NextRequest) {
 
   if (isMarketsHost(h)) {
     return rewriteToSegment(request, 'markets');
+  }
+
+  if (isEditorHost(h)) {
+    return rewriteToSegment(request, 'editor');
+  }
+
+  if (isAdminHost(h)) {
+    return rewriteToSegment(request, 'admin');
   }
 
   if (isPressHost(h)) {
