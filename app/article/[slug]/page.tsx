@@ -1,24 +1,33 @@
-import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { Facebook, Linkedin, MessageCircle, Share2, Twitter } from 'lucide-react';
-import { SEO } from '../components/SEO';
-import { articles, getArticleBySlug } from '../data/newsSiteData';
+import { articles, getArticleBySlug } from '@/data/newsSiteData';
 
-export const ArticlePage: React.FC = () => {
-  const { slug } = useParams();
-  const article = getArticleBySlug(slug);
+type PageProps = {
+  params: {
+    slug: string;
+  };
+};
 
-  if (!article) {
-    return (
-      <main className="article-main">
-        <section className="article-shell">
-          <h1>Article not found</h1>
-          <p>The story you are looking for is unavailable.</p>
-          <Link to="/">Return to homepage</Link>
-        </section>
-      </main>
-    );
-  }
+export function generateMetadata({ params }: PageProps): Metadata {
+  const article = getArticleBySlug(params.slug);
+  if (!article) return { title: 'Article not found' };
+
+  return {
+    title: `${article.title} | Bridge Observer Daily`,
+    description: article.summary,
+  };
+}
+
+export function generateStaticParams() {
+  return articles.map((article) => ({ slug: article.slug }));
+}
+
+export default function ArticlePage({ params }: PageProps) {
+  const article = getArticleBySlug(params.slug);
+  if (!article) notFound();
 
   const related = articles
     .filter((item) => item.section === article.section && item.slug !== article.slug)
@@ -26,24 +35,18 @@ export const ArticlePage: React.FC = () => {
 
   return (
     <div className="news-root">
-      <SEO
-        title={article.title}
-        description={article.summary}
-        keywords={`${article.section.toLowerCase()}, modern newsroom, dark editorial`}
-      />
-
       <header className="news-header" role="banner">
         <div className="news-topbar">
           <p>{article.section}</p>
           <p>{article.publishedAt}</p>
         </div>
         <nav className="news-nav" aria-label="Article navigation">
-          <Link to="/" className="brand-mark">
+          <Link href="/" className="brand-mark">
             Bridge Observer
           </Link>
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <Link href="/">Home</Link>
             </li>
           </ul>
         </nav>
@@ -51,7 +54,16 @@ export const ArticlePage: React.FC = () => {
 
       <main className="article-main">
         <article className="article-shell">
-          <img src={article.imageUrl} alt={article.title} className="article-hero-image" />
+          <div className="article-hero-image-wrap">
+            <Image
+              src={article.imageUrl}
+              alt={article.title}
+              fill
+              className="article-hero-image"
+              sizes="(max-width: 768px) 100vw, min(1232px, 100vw)"
+              priority
+            />
+          </div>
           <header className="article-header">
             <span>{article.section}</span>
             <h1>{article.title}</h1>
@@ -89,8 +101,16 @@ export const ArticlePage: React.FC = () => {
           <div className="related-grid">
             {related.map((story) => (
               <article key={story.slug} className="news-card">
-                <Link to={`/article/${story.slug}`} className="card-link">
-                  <img src={story.imageUrl} alt={story.title} loading="lazy" />
+                <Link href={`/article/${story.slug}`} className="card-link">
+                  <div className="news-card-image-wrap">
+                    <Image
+                      src={story.imageUrl}
+                      alt={story.title}
+                      fill
+                      className="news-card-thumb"
+                      sizes="(max-width: 860px) 100vw, (max-width: 1050px) 50vw, 33vw"
+                    />
+                  </div>
                   <div className="card-body">
                     <span>{story.section}</span>
                     <h3>{story.title}</h3>
@@ -118,4 +138,4 @@ export const ArticlePage: React.FC = () => {
       </main>
     </div>
   );
-};
+}

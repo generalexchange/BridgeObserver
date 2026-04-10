@@ -1,18 +1,21 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { SEO } from '../components/SEO';
 import {
   articles,
   featuredSlides,
   mostReadStories,
   navSections,
-  sponsoredStories,
   trendingStories,
-} from '../data/newsSiteData';
+  sponsoredStories,
+  type NewsSection,
+} from '@/data/newsSiteData';
 
-export const Homepage: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<'All' | (typeof navSections)[number]>('All');
+export default function HomePageClient() {
+  const [activeSection, setActiveSection] = useState<'All' | NewsSection>('All');
   const [activeSlide, setActiveSlide] = useState(0);
 
   const filteredArticles = useMemo(() => {
@@ -29,12 +32,6 @@ export const Homepage: React.FC = () => {
 
   return (
     <div className="news-root">
-      <SEO
-        title="Bridge Observer Daily | Dark Editorial News"
-        description="A modern dark-themed newsroom featuring breaking coverage, deep analysis, and structured sections across news, sports, business, and culture."
-        keywords="news homepage, dark mode news site, editorial design, modern newspaper layout, msn style, dallas morning news style"
-      />
-
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
@@ -45,7 +42,7 @@ export const Homepage: React.FC = () => {
           <p>{new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}</p>
         </div>
         <nav className="news-nav" aria-label="Primary">
-          <Link to="/" className="brand-mark">
+          <Link href="/" className="brand-mark">
             Bridge Observer
           </Link>
           <ul>
@@ -81,12 +78,21 @@ export const Homepage: React.FC = () => {
               className={`hero-slide ${index === activeSlide ? 'is-visible' : ''}`}
               aria-hidden={index !== activeSlide}
             >
-              <img src={story.imageUrl} alt={story.title} loading={index === 0 ? 'eager' : 'lazy'} />
+              <div className="hero-slide-media">
+                <Image
+                  src={story.imageUrl}
+                  alt={story.title}
+                  fill
+                  className="hero-slide-image"
+                  sizes="(max-width: 768px) 100vw, min(1232px, 100vw)"
+                  priority={index === 0}
+                />
+              </div>
               <div className="hero-overlay">
                 <span>{story.section}</span>
                 <h1>{story.title}</h1>
                 <p>{story.summary}</p>
-                <Link to={`/article/${story.slug}`}>Read full story</Link>
+                <Link href={`/article/${story.slug}`}>Read full story</Link>
               </div>
             </article>
           ))}
@@ -118,8 +124,16 @@ export const Homepage: React.FC = () => {
             <div className="grid-wrap">
               {filteredArticles.map((story) => (
                 <article key={story.slug} className="news-card">
-                  <Link to={`/article/${story.slug}`} className="card-link" aria-label={`Read ${story.title}`}>
-                    <img src={story.imageUrl} alt={story.title} loading="lazy" />
+                  <Link href={`/article/${story.slug}`} className="card-link" aria-label={`Read ${story.title}`}>
+                    <div className="news-card-image-wrap">
+                      <Image
+                        src={story.imageUrl}
+                        alt={story.title}
+                        fill
+                        className="news-card-thumb"
+                        sizes="(max-width: 860px) 100vw, (max-width: 1050px) 50vw, 40vw"
+                      />
+                    </div>
                     <div className="card-body">
                       <span>{story.section}</span>
                       <h3>{story.title}</h3>
@@ -137,7 +151,7 @@ export const Homepage: React.FC = () => {
               <ul>
                 {trendingStories.map((story) => (
                   <li key={story.slug}>
-                    <Link to={`/article/${story.slug}`}>{story.title}</Link>
+                    <Link href={`/article/${story.slug}`}>{story.title}</Link>
                   </li>
                 ))}
               </ul>
@@ -148,7 +162,7 @@ export const Homepage: React.FC = () => {
               <ul>
                 {mostReadStories.map((story) => (
                   <li key={story.slug}>
-                    <Link to={`/article/${story.slug}`}>{story.title}</Link>
+                    <Link href={`/article/${story.slug}`}>{story.title}</Link>
                   </li>
                 ))}
               </ul>
@@ -198,5 +212,4 @@ export const Homepage: React.FC = () => {
       </footer>
     </div>
   );
-};
-
+}
