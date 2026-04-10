@@ -84,12 +84,15 @@ export function TerminalShell() {
           panelRef={sidebarRef}
           collapsible
           minSize={14}
-          collapsedSize={6}
+          collapsedSize="56px"
           defaultSize={22}
         >
           <MarketSidebar sidebarPanelRef={sidebarRef} />
         </Panel>
-        <Separator className="market-resize-handle market-resize-handle--h" />
+        <Separator
+          className="market-resize-handle market-resize-handle--h"
+          aria-label="Resize sidebar. Double-click to reset panel size."
+        />
         <Panel className="market-term__main-panel" id="main" minSize={45}>
           <Group
             className="market-term__grid-v"

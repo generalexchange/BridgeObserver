@@ -1,6 +1,7 @@
 'use client';
 
 import type { RefObject } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { PanelImperativeHandle } from 'react-resizable-panels';
@@ -10,6 +11,7 @@ import {
   Bot,
   Calendar,
   ChevronLeft,
+  ChevronsRight,
   LayoutDashboard,
   Leaf,
   LineChart,
@@ -52,6 +54,21 @@ export function MarketSidebar({ sidebarPanelRef }: Props) {
   const router = useRouter();
   const homeHref = useMarketHref('/');
   const loginHref = useMarketLoginHref();
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    const sync = () => {
+      const next = sidebarPanelRef.current?.isCollapsed() ?? false;
+      setCollapsed((prev) => (prev !== next ? next : prev));
+    };
+    sync();
+    const id = window.setInterval(sync, 200);
+    return () => window.clearInterval(id);
+  }, [sidebarPanelRef]);
+
+  const expand = () => {
+    sidebarPanelRef.current?.expand();
+  };
 
   const toggleCollapse = () => {
     const p = sidebarPanelRef.current;
@@ -60,6 +77,23 @@ export function MarketSidebar({ sidebarPanelRef }: Props) {
     else p.collapse();
   };
 
+  if (collapsed) {
+    return (
+      <aside className="market-sidebar market-sidebar--collapsed" aria-label="Navigation collapsed">
+        <button
+          type="button"
+          className="market-sidebar__expand-rail"
+          onClick={expand}
+          aria-label="Expand sidebar navigation"
+        >
+          <ChevronsRight size={22} strokeWidth={2.25} aria-hidden className="market-sidebar__expand-icon" />
+          <span className="market-sidebar__expand-text">Open nav</span>
+        </button>
+        <p className="market-sidebar__expand-hint">Or drag the edge</p>
+      </aside>
+    );
+  }
+
   return (
     <aside className="market-sidebar">
       <div className="market-sidebar__brand">
@@ -67,11 +101,11 @@ export function MarketSidebar({ sidebarPanelRef }: Props) {
           Bridge Observer
         </Link>
         <span className="market-sidebar__badge">Markets</span>
-        <button type="button" className="market-sidebar__collapse" aria-label="Toggle navigation width" onClick={toggleCollapse}>
+        <button type="button" className="market-sidebar__collapse" aria-label="Collapse navigation" onClick={toggleCollapse}>
           <ChevronLeft size={16} aria-hidden />
         </button>
       </div>
-      <nav className="market-sidebar__nav" aria-label="Terminal modules">
+      <nav className="market-sidebar__nav" id="market-terminal-nav" aria-label="Terminal modules">
         {NAV.map((item) => {
           const Icon = item.icon;
           const active = activeModule === item.id;

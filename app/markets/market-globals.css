@@ -315,8 +315,8 @@
   display: flex;
 }
 
-/* Ensure nav is readable; avoids “invisible” sidebar when flex basis is too narrow */
-.market-term__sidebar-panel .market-sidebar {
+/* Expanded nav: readable min width. Collapsed rail overrides below. */
+.market-term__sidebar-panel .market-sidebar:not(.market-sidebar--collapsed) {
   width: 100%;
   min-width: min(13.5rem, 100%);
 }
@@ -359,8 +359,9 @@
 }
 
 .market-resize-handle--h {
-  width: 5px;
+  width: 6px;
   cursor: col-resize;
+  flex-shrink: 0;
 }
 
 .market-resize-handle--v {
@@ -753,6 +754,78 @@
 .market-sidebar__foot {
   padding: 0.45rem 0.35rem 0.65rem;
   border-top: 1px solid rgba(43, 48, 56, 0.55);
+}
+
+/* Collapsed: obvious expand control (min-width rule does not apply) */
+.market-sidebar--collapsed {
+  min-width: 0 !important;
+  width: 100%;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0.35rem 0.2rem 0.5rem;
+  gap: 0.35rem;
+  border-right: 1px solid rgba(106, 179, 255, 0.35);
+  background: linear-gradient(180deg, rgba(22, 26, 34, 0.98) 0%, rgba(12, 14, 18, 0.99) 100%);
+}
+
+.market-sidebar__expand-rail {
+  flex: 1;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  border: 1px solid rgba(106, 179, 255, 0.45);
+  border-radius: 10px;
+  background: rgba(106, 179, 255, 0.1);
+  color: var(--market-accent-soft);
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0.5rem 0.15rem;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.market-sidebar__expand-rail:hover {
+  background: rgba(106, 179, 255, 0.2);
+  border-color: var(--market-accent-soft);
+  color: var(--market-text);
+}
+
+.market-sidebar__expand-rail:focus-visible {
+  outline: 2px solid var(--market-accent);
+  outline-offset: 2px;
+}
+
+.market-sidebar__expand-icon {
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 8px rgba(106, 179, 255, 0.55));
+}
+
+.market-reduced-motion .market-sidebar__expand-icon {
+  filter: none;
+}
+
+.market-sidebar__expand-text {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  text-align: center;
+  max-width: 100%;
+  word-break: break-word;
+}
+
+.market-sidebar__expand-hint {
+  margin: 0;
+  font-size: 0.58rem;
+  line-height: 1.25;
+  color: var(--market-muted);
+  text-align: center;
+  padding: 0 0.1rem;
 }
 
 /* ----- Dock ----- */
