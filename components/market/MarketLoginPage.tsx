@@ -30,7 +30,7 @@ export function MarketLoginPage() {
       <div className="market-login__grid" aria-hidden />
       <div className="market-login__card market-login-fade">
         <p className="market-login__eyebrow">Institutional access</p>
-        <h1 className="market-login__title">Bridge Observer Market</h1>
+        <h1 className="market-login__title">Bridge Observer Markets</h1>
         <p className="market-login__lede">Institutional Market Intelligence System. Mock auth accepts any credentials.</p>
         <form className="market-login__form" onSubmit={onSubmit}>
           <label className="market-field">

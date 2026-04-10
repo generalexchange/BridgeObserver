@@ -315,6 +315,12 @@
   display: flex;
 }
 
+/* Ensure nav is readable; avoids “invisible” sidebar when flex basis is too narrow */
+.market-term__sidebar-panel .market-sidebar {
+  width: 100%;
+  min-width: min(13.5rem, 100%);
+}
+
 .market-term__main-panel {
   min-width: 0;
   min-height: 0;

@@ -2,27 +2,30 @@
 
 import { usePathname } from 'next/navigation';
 
-export function useMarketPathPrefix(): '' | '/market' {
+export const MARKETS_SEGMENT = '/markets';
+
+export function useMarketPathPrefix(): '' | typeof MARKETS_SEGMENT {
   const pathname = usePathname();
-  if (!pathname) return '/market';
-  return pathname.startsWith('/market') ? '/market' : '';
+  if (!pathname) return MARKETS_SEGMENT;
+  return pathname.startsWith(MARKETS_SEGMENT) ? MARKETS_SEGMENT : '';
 }
 
+/** Href under the `/markets` App Router segment (works from main site or from `/markets/*` pages). */
 export function useMarketHref(path: string, search?: string): string {
-  const prefix = useMarketPathPrefix();
   const clean = path.startsWith('/') ? path : `/${path}`;
   const q = search ? (search.startsWith('?') ? search : `?${search}`) : '';
-  if (clean === '/market' || clean === '/market/') return (prefix || '/') + q;
-  let href: string;
-  if (prefix === '/market') {
-    href = clean.startsWith('/market') ? clean : `/market${clean}`;
-  } else {
-    href = clean;
+  if (clean === '/' || clean === '') {
+    return `${MARKETS_SEGMENT}${q}`;
   }
-  return href + q;
+  if (clean === MARKETS_SEGMENT || clean === `${MARKETS_SEGMENT}/`) {
+    return `${MARKETS_SEGMENT}${q}`;
+  }
+  if (clean.startsWith(`${MARKETS_SEGMENT}/`)) {
+    return `${clean}${q}`;
+  }
+  return `${MARKETS_SEGMENT}${clean}${q}`;
 }
 
 export function useMarketLoginHref(): string {
-  const prefix = useMarketPathPrefix();
-  return prefix === '/market' ? '/market' : '/';
+  return MARKETS_SEGMENT;
 }

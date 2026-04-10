@@ -6,8 +6,8 @@
  * `middleware.ts` rewrites that host to the `/press` App Router segment. Local: `http://localhost:3000/press`
  * or add `127.0.0.1 press.localhost` to hosts and open `http://press.localhost:3000`.
  *
- * Market workstation: add `market.bridgeobserver.com` the same way; middleware rewrites to `/market`.
- * Local: `http://localhost:3000/market` or `http://market.localhost:3000`.
+ * Market workstation: add `markets.bridgeobserver.com` the same way; middleware rewrites to `/markets`.
+ * Local: `http://localhost:3000/markets` or `http://markets.localhost:3000`.
  */
 export function getSiteUrl(): string {
   const env = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '');

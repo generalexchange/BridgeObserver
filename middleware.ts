@@ -4,9 +4,9 @@ import type { NextRequest } from 'next/server';
 /**
  * Rewrites subdomain hosts to App Router segments:
  * - press.* → /press/* (Press CMS — unchanged)
- * - market.* → /market/* (Market Intelligence Workstation)
+ * - markets.* → /markets/* (Market Intelligence Workstation)
  *
- * Local: press.localhost / market.localhost in hosts, or use /press and /market on localhost.
+ * Local: press.localhost / markets.localhost in hosts, or use /press and /markets on localhost.
  */
 function hostName(host: string): string {
   return host.split(':')[0]?.toLowerCase() ?? '';
@@ -16,8 +16,8 @@ function isPressHost(h: string): boolean {
   return h.startsWith('press.') || h === 'press.localhost';
 }
 
-function isMarketHost(h: string): boolean {
-  return h.startsWith('market.') || h === 'market.localhost';
+function isMarketsHost(h: string): boolean {
+  return h.startsWith('markets.') || h === 'markets.localhost';
 }
 
 function shouldBypass(pathname: string): boolean {
@@ -29,7 +29,7 @@ function shouldBypass(pathname: string): boolean {
   );
 }
 
-function rewriteToSegment(request: NextRequest, segment: 'press' | 'market'): NextResponse {
+function rewriteToSegment(request: NextRequest, segment: 'press' | 'markets'): NextResponse {
   const url = request.nextUrl.clone();
   const { pathname } = url;
 
@@ -51,8 +51,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (isMarketHost(h)) {
-    return rewriteToSegment(request, 'market');
+  if (isMarketsHost(h)) {
+    return rewriteToSegment(request, 'markets');
   }
 
   if (isPressHost(h)) {

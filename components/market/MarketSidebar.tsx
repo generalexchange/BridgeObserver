@@ -66,7 +66,7 @@ export function MarketSidebar({ sidebarPanelRef }: Props) {
         <Link href={homeHref} className="market-sidebar__logo">
           Bridge Observer
         </Link>
-        <span className="market-sidebar__badge">Market</span>
+        <span className="market-sidebar__badge">Markets</span>
         <button type="button" className="market-sidebar__collapse" aria-label="Toggle navigation width" onClick={toggleCollapse}>
           <ChevronLeft size={16} aria-hidden />
         </button>
